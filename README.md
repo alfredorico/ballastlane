@@ -1,0 +1,201 @@
+# Ballastlane API
+
+Rails 8.1 API-only application with JWT authentication.
+
+## Requirements
+
+- Ruby 3.4.5
+- Rails 8.1.1
+- PostgreSQL 15+
+- Docker & Docker Compose
+
+## Setup
+
+### Using Docker (Recommended)
+
+```bash
+# Start services
+make up
+
+# Install dependencies
+make bundle install
+
+# Run migrations
+make migrate
+
+# Seed the database (creates admin user)
+make rails db:seed
+```
+
+### Default Credentials
+
+- Username: `admin`
+- Password: `admin`
+
+## Authentication
+
+### Overview
+
+This API uses JWT (JSON Web Token) for authentication with a dual-token system:
+
+| Token Type | Expiration | Purpose |
+|------------|------------|---------|
+| Access Token | 15 minutes | Authenticate API requests |
+| Refresh Token | 1 week | Obtain new token pairs |
+
+### Security Features
+
+- **Token Rotation**: Each refresh generates new access AND refresh tokens
+- **Single Session**: Logging in invalidates tokens on other devices
+- **JTI Revocation**: Tokens are invalidated when user's JTI changes
+
+### Endpoints
+
+#### POST /api/v1/auth/signup
+
+Create a new user account.
+
+**Request:**
+```json
+{
+  "username": "johndoe",
+  "password": "mypassword123",
+  "password_confirmation": "mypassword123"
+}
+```
+
+**Validations:**
+- Username: alphanumeric only, whitespace auto-trimmed
+- Password: 5-64 characters, alphanumeric + special chars (. - ! * #)
+
+**Response (201 Created):**
+```json
+{
+  "message": "Account created successfully",
+  "user": {
+    "id": 1,
+    "username": "johndoe",
+    "created_at": "2025-01-15T10:30:00Z"
+  },
+  "access_token": "eyJhbGciOiJIUzI1NiJ9...",
+  "refresh_token": "eyJhbGciOiJIUzI1NiJ9...",
+  "token_type": "Bearer",
+  "expires_in": 900
+}
+```
+
+#### POST /api/v1/auth/login
+
+Authenticate and obtain tokens.
+
+**Request:**
+```json
+{
+  "username": "johndoe",
+  "password": "mypassword123"
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "message": "Login successful",
+  "user": {
+    "id": 1,
+    "username": "johndoe",
+    "created_at": "2025-01-15T10:30:00Z"
+  },
+  "access_token": "eyJhbGciOiJIUzI1NiJ9...",
+  "refresh_token": "eyJhbGciOiJIUzI1NiJ9...",
+  "token_type": "Bearer",
+  "expires_in": 900
+}
+```
+
+#### DELETE /api/v1/auth/logout
+
+Revoke the current session (requires authentication).
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Response (200 OK):**
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+#### POST /api/v1/auth/refresh_token
+
+Exchange refresh token for new token pair.
+
+**Request:**
+```json
+{
+  "refresh_token": "eyJhbGciOiJIUzI1NiJ9..."
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "message": "Token refreshed successfully",
+  "access_token": "eyJhbGciOiJIUzI1NiJ9...",
+  "refresh_token": "eyJhbGciOiJIUzI1NiJ9...",
+  "token_type": "Bearer",
+  "expires_in": 900
+}
+```
+
+### Error Responses
+
+**401 Unauthorized:**
+```json
+{
+  "error": "Invalid username or password"
+}
+```
+
+**422 Unprocessable Entity:**
+```json
+{
+  "error": "Signup failed",
+  "details": [
+    "Username must contain only alphanumeric characters",
+    "Password is too short (minimum is 5 characters)"
+  ]
+}
+```
+
+## API Usage Examples (cURL)
+
+```bash
+# Set base URL
+BASE_URL="http://localhost:3000/api/v1"
+
+# Signup
+curl -X POST "$BASE_URL/auth/signup" \
+  -H "Content-Type: application/json" \
+  -d '{"username": "testuser", "password": "test123", "password_confirmation": "test123"}'
+
+# Login
+curl -X POST "$BASE_URL/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "admin"}'
+
+# Store tokens (after login, replace with actual tokens)
+ACCESS_TOKEN="your_access_token_here"
+REFRESH_TOKEN="your_refresh_token_here"
+
+# Refresh tokens
+curl -X POST "$BASE_URL/auth/refresh_token" \
+  -H "Content-Type: application/json" \
+  -d "{\"refresh_token\": \"$REFRESH_TOKEN\"}"
+
+# Logout
+curl -X DELETE "$BASE_URL/auth/logout" \
+  -H "Authorization: Bearer $ACCESS_TOKEN"
+```
