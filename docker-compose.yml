@@ -1,0 +1,30 @@
+services:
+  api: &app-base
+    build:
+      context: ./ballastlane-api
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./ballastlane-api:/app
+      - bundle:/bundle
+    environment: &app-env
+      DATABASE_URL: ${DATABASE_URL:-postgres://postgres:postgres@db:5432}
+      EDITOR: ${EDITOR:-nano}
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
+  bundle:
