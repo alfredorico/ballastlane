@@ -1,7 +1,38 @@
-import "./App.css";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
+import { AuthProvider } from "./contexts/AuthContext";
+import Login from "./pages/Login";
+import AppLayout from "./pages/AppLayout";
+import ProtectedRouted from "./pages/ProtectedRouted";
+import PageNotFound from "./pages/PageNotFound";
+
+import Homepage from "./pages/Homepage";
+
+import PokemonList from "./components/PokemonList";
 function App() {
-  return <h1 class="bg-red-700 font-bold text-white">Pokedex</h1>;
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Homepage />} />
+          <Route path="login" element={<Login />} />
+          <Route
+            path="app"
+            element={
+              <ProtectedRouted>
+                <AppLayout />
+              </ProtectedRouted>
+            }
+          >
+            <Route index element={<Navigate replace to="pokemons" />} />
+            <Route path="pokemons" element={<PokemonList />} />
+            {/* <Route path="pokemons/:id" element={<Pokemon />} /> */}
+          </Route>
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
 export default App;

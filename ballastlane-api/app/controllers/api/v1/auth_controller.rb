@@ -58,6 +58,7 @@ module Api
 
           render_success({
             message: "Token refreshed successfully",
+            user: user_response(user),
             **tokens
           })
         rescue JwtService::TokenExpiredError
@@ -78,8 +79,7 @@ module Api
       def user_response(user)
         {
           id: user.id,
-          username: user.username,
-          created_at: user.created_at
+          username: user.username
         }
       end
     end
