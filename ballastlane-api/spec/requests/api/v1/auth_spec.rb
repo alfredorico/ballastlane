@@ -32,7 +32,7 @@ RSpec.describe "Api::V1::Auth", type: :request do
       it "returns validation error" do
         post "/api/v1/auth/signup", params: valid_params.except(:username)
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
 
         json = JSON.parse(response.body)
         expect(json["error"]).to eq("Signup failed")
@@ -44,7 +44,7 @@ RSpec.describe "Api::V1::Auth", type: :request do
       it "returns validation error for special characters" do
         post "/api/v1/auth/signup", params: valid_params.merge(username: "invalid_user!")
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
 
         json = JSON.parse(response.body)
         expect(json["details"]).to include("Username must contain only alphanumeric characters")
@@ -58,7 +58,7 @@ RSpec.describe "Api::V1::Auth", type: :request do
           password_confirmation: "1234"
         )
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
 
         json = JSON.parse(response.body)
         expect(json["details"]).to include("Password is too short (minimum is 5 characters)")
@@ -71,7 +71,7 @@ RSpec.describe "Api::V1::Auth", type: :request do
           password_confirmation: "differentpass"
         )
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
 
         json = JSON.parse(response.body)
         expect(json["details"]).to include("Password confirmation doesn't match Password")
@@ -84,7 +84,7 @@ RSpec.describe "Api::V1::Auth", type: :request do
       it "returns validation error" do
         post "/api/v1/auth/signup", params: valid_params
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
 
         json = JSON.parse(response.body)
         expect(json["details"]).to include("Username has already been taken")

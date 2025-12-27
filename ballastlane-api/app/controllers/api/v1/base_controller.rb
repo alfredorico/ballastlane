@@ -3,7 +3,7 @@ module Api
     class BaseController < ApplicationController
       include Authenticatable
 
-      def render_error(message, status: :unprocessable_entity, errors: nil)
+      def render_error(message, status: :unprocessable_content, errors: nil)
         response = { error: message }
         response[:details] = errors if errors.present?
         render json: response, status: status

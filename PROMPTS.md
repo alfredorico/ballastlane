@@ -196,3 +196,22 @@ app/entities/pokemon_entity.rb: Basic attributes and to_h expectations.
 - `spec/services/pokemon/list_service_spec.rb` - Pagination logic, mocked repository
 
 **Total: 72 tests, 0 failures**
+
+### Prompt 8: RSpec Request Tests for PokemonsController (Stage 2)
+
+```
+Lets implement a RSpec tests of type request for the PokemonController considering:
+
+- Testing authentication protection for the endpoints
+- If user is authenticated create an RSpec context for successful/failed cases. Use the VCR cassettes already created as the data coming from the PokemonApiAdapter because request specs are kinda integration tests.
+```
+
+**Test File Created:**
+- `spec/requests/api/v1/pokemons_spec.rb` - Request specs for PokemonsController
+
+**Test Coverage:**
+- Authentication protection (8 tests): missing token, invalid token, expired token, revoked token for both endpoints
+- Index endpoint success cases: returns 200, pokemons array, basic info, pagination metadata, respects per_page param
+- Show endpoint success cases: returns 200 for valid ID, Pokemon details, works with name, returns 404 for invalid Pokemon
+
+**Total: 19 tests, 0 failures** (reusing existing VCR cassettes)
