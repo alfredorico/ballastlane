@@ -65,3 +65,49 @@ For the AuthController, lets create an RSpec of type `request`. Lets define cont
 
 For the refresh token endpoint it's important to also test behavior when trying to refresh with expired tokens either `refresh` (long live) or `access` (short live) tokens.
 ```
+
+## Pokemon API Integration
+
+### Prompt 5: Pokemon API Gem Exploration
+
+Research the poke-api-v2 gem (https://github.com/rdavid1099/poke-api-v2) to understand how to retrieve Pokemon data.
+
+```
+Can you tell me how could I get the following attributes for a given pokemon?
+- weight
+- height
+- a list of types name
+- a list of abilities name
+- a photo of the pokemon
+- a description of the pokemon
+```
+
+**Findings:** The gem wraps PokéAPI v2 using `PokeApi.get()`. Pokemon attributes (weight, height, types, abilities, sprites) come from the `pokemon` endpoint, while descriptions require a separate call to `pokemon_species` for `flavor_text_entries`.
+
+```ruby
+require 'poke-api-v2'
+
+pokemon_name = 'pikachu'
+
+# Get Pokémon data
+pokemon = PokeApi.get(pokemon: pokemon_name)
+
+# Extract all attributes
+data = {
+  weight: pokemon.weight / 10.0,  # Convert to kg
+  height: pokemon.height / 10.0,  # Convert to meters
+  types: pokemon.types.map { |t| t.type.name },
+  abilities: pokemon.abilities.map { |a| a.ability.name },
+  photo: pokemon.sprites.front_default,
+  hq_photo: pokemon.sprites.other.official_artwork.front_default
+}
+
+# Get description (requires chaining to species)
+species = pokemon.species.get
+data[:description] = species.flavor_text_entries
+  .find { |entry| entry.language.name == 'en' }
+  &.flavor_text
+  &.gsub("\n", " ")  # Clean up formatting
+
+puts data
+```
