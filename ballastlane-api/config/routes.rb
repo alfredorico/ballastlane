@@ -14,6 +14,8 @@ Rails.application.routes.draw do
         delete "logout", to: "auth#logout"
         post "refresh_token", to: "auth#refresh_token"
       end
+
+      resources :pokemons, only: [ :index, :show ]
     end
   end
 end

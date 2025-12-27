@@ -111,3 +111,65 @@ data[:description] = species.flavor_text_entries
 
 puts data
 ```
+
+### Prompt 6: Pokemon API Clean Architecture Implementation
+
+```
+Lets start to work with the following plan considering that we have the gem 'poke-api-v2' installed in the system.
+
+I need to build a PokemonController to provide the following protected endpoints by authentication:
+
+- '/api/v1/pokemons' to list all pokemons
+- '/api/v1/pokemons/:id' to fetch a specific pokemon.
+
+I'd like to implement a clean architecture approach according to the following criteria:
+
+- Create a domain entity called Entities::Pokemon to wrap specific pokemon data fetched from the api.
+- Create a PokemonApiAdapter with the methods:
+  1. find: in order to find pokemon giving and id. You can use the following ruby snippet just as a guidance of the data that I need per pokemon. You need to create proper private methods for the extraction
+  2. all: receiving a limit (default to 20) and offset (default to 0)
+
+- Create a PokemonRepository class receiving an adpater instance of PokemonApiAdapter as default to follow the clean architecture pattern. It should define the find and all methods as wrappers
+- Create a Pokemon::FetchService to get data for a specific pokemon giving its id
+- Create a Pokemon::ListService to fetch a list of pokemon considering the pagination info provided by the call to `PokeApi.get(:pokemon)`. Let's use a default of 20 records per page.
+- Create a ValueObjects::ServiceResult to hold successful or error status with data. This class should be used in the services class Pokemon::FetchService and Pokemon::ListService
+- Finally create a controller Api::V1::PokemonsController defining the following protected endpoints (user must be authenticated) that internally use the propose service classes:
+  GET /api/v1/pokemons (We need to provide paginated data)
+  GET /api/v1/pokemons/:id
+
+So the files would be:
+
+Domain Entities
+app/entities/pokemon.rb
+
+Value Objects:
+app/value_objects/service_result.rb
+
+External API Integration
+app/adapters/pokemon_api_adapter.rb
+
+Repositories for Data Access Layer
+app/repositories/pokemon_repository.rb
+
+Services for business logic:
+app/services/pokemon/fetch_service.rb
+app/services/pokemon/list_service.rb
+
+Controllers
+app/controllers/api/v1/pokemons_controller.rb
+```
+
+**Architecture:**
+```
+Controller → Service → Repository → Adapter → PokeAPI
+                ↓
+          ServiceResult (success/error)
+                ↓
+          Entities::Pokemon
+```
+
+**Key Decisions:**
+- List endpoint returns basic info only (id, name, photo) for performance
+- Show endpoint returns full details (weight, height, types, abilities, photo, hq_photo, description)
+- Errors handled via ServiceResult pattern (not exceptions)
+- Both endpoints require authentication (inherits from BaseController)

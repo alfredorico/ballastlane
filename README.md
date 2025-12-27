@@ -199,3 +199,105 @@ curl -X POST "$BASE_URL/auth/refresh_token" \
 curl -X DELETE "$BASE_URL/auth/logout" \
   -H "Authorization: Bearer $ACCESS_TOKEN"
 ```
+
+## Pokemon API
+
+Protected endpoints for fetching Pokemon data from PokeAPI.
+
+### Endpoints
+
+#### GET /api/v1/pokemons
+
+List Pokemon with pagination. Returns basic info (id, name, photo).
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Query Parameters:**
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| page | 1 | Page number |
+| per_page | 20 | Items per page |
+
+**Response (200 OK):**
+```json
+{
+  "pokemons": [
+    { "id": 1, "name": "bulbasaur", "photo": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" },
+    { "id": 2, "name": "ivysaur", "photo": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png" }
+  ],
+  "pagination": {
+    "page": 1,
+    "per_page": 20,
+    "total": 1302,
+    "total_pages": 66,
+    "next_page": 2,
+    "previous_page": null
+  }
+}
+```
+
+#### GET /api/v1/pokemons/:id
+
+Get detailed Pokemon information by ID or name.
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Response (200 OK):**
+```json
+{
+  "id": 25,
+  "name": "pikachu",
+  "weight": 6.0,
+  "height": 0.4,
+  "types": ["electric"],
+  "abilities": ["static", "lightning-rod"],
+  "photo": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+  "hq_photo": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
+  "description": "When several of these POKéMON gather, their electricity could build and cause lightning storms."
+}
+```
+
+**Error Response (404 Not Found):**
+```json
+{
+  "error": "Pokemon not found"
+}
+```
+
+### Pokemon API Usage Examples (cURL)
+
+```bash
+# Set base URL and access token (obtain token via login first)
+BASE_URL="http://localhost:3000/api/v1"
+ACCESS_TOKEN="your_access_token_here"
+
+# List Pokemon (first page, 20 items)
+curl -X GET "$BASE_URL/pokemons" \
+  -H "Authorization: Bearer $ACCESS_TOKEN"
+
+# List Pokemon with pagination
+curl -X GET "$BASE_URL/pokemons?page=2&per_page=10" \
+  -H "Authorization: Bearer $ACCESS_TOKEN"
+
+# Get Pokemon by ID
+curl -X GET "$BASE_URL/pokemons/25" \
+  -H "Authorization: Bearer $ACCESS_TOKEN"
+
+# Get Pokemon by name
+curl -X GET "$BASE_URL/pokemons/pikachu" \
+  -H "Authorization: Bearer $ACCESS_TOKEN"
+
+# Full workflow: Login and fetch Pokemon
+ACCESS_TOKEN=$(curl -s -X POST "$BASE_URL/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "admin"}' | jq -r '.access_token')
+
+curl -X GET "$BASE_URL/pokemons/charmander" \
+  -H "Authorization: Bearer $ACCESS_TOKEN"
+```
