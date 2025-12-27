@@ -7,6 +7,8 @@ module Pokemon
     end
 
     def call(page: 1, per_page: DEFAULT_PER_PAGE)
+      # We want to let this class to handle the pagination idiom
+      # based on page and per_page and translate to what repository expects based in limit and offset.
       page = [page.to_i, 1].max
       per_page = [per_page.to_i, 1].max
       offset = (page - 1) * per_page

@@ -1,0 +1,73 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://pokeapi.co/api/v2/pokemon/?limit=5&offset=5
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - pokeapi.co
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sat, 27 Dec 2025 14:03:42 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Cache-Control:
+      - public, max-age=86400, s-maxage=86400
+      Etag:
+      - W/"1e2-daM8XYF+vpn0RT10CRy7N3SlM1w"
+      Server:
+      - cloudflare
+      Strict-Transport-Security:
+      - max-age=31556926
+      Traceparent:
+      - 00-b1a07a348b226642e8dcfb991d8b2b93-cb48e32d33f09bcf-00
+      X-Cloud-Trace-Context:
+      - b1a07a348b226642e8dcfb991d8b2b93/14648207571306978255
+      X-Country-Code:
+      - US
+      X-Powered-By:
+      - Express
+      Report-To:
+      - '{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=WVoj%2BiFMKjQbd3E9%2BQgmGuh%2FuTNQRPZAigH%2BQ2pdJxMtgzsMXQBvwoSzXSuWPv%2BDtVpW1bfCXw55sw136GvURKatTeXdPtLUuy0%3D"}]}'
+      X-Served-By:
+      - cache-chi-klot8100112-CHI
+      X-Cache:
+      - HIT
+      X-Cache-Hits:
+      - '0'
+      X-Timer:
+      - S1766844222.212884,VS0,VE1
+      Vary:
+      - Accept-Encoding,cookie,need-authorization, x-fh-requested-host, accept-encoding
+      Alt-Svc:
+      - h3=":443"; ma=86400
+      Nel:
+      - '{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}'
+      Cf-Cache-Status:
+      - MISS
+      Cf-Ray:
+      - 9b495ce44fc1cedc-MIA
+    body:
+      encoding: ASCII-8BIT
+      string: '{"count":1350,"next":"https://pokeapi.co/api/v2/pokemon/?offset=10&limit=5","previous":"https://pokeapi.co/api/v2/pokemon/?offset=0&limit=5","results":[{"name":"charizard","url":"https://pokeapi.co/api/v2/pokemon/6/"},{"name":"squirtle","url":"https://pokeapi.co/api/v2/pokemon/7/"},{"name":"wartortle","url":"https://pokeapi.co/api/v2/pokemon/8/"},{"name":"blastoise","url":"https://pokeapi.co/api/v2/pokemon/9/"},{"name":"caterpie","url":"https://pokeapi.co/api/v2/pokemon/10/"}]}'
+  recorded_at: Sat, 27 Dec 2025 14:03:42 GMT
+recorded_with: VCR 6.4.0

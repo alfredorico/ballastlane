@@ -173,3 +173,26 @@ Controller → Service → Repository → Adapter → PokeAPI
 - Show endpoint returns full details (weight, height, types, abilities, photo, hq_photo, description)
 - Errors handled via ServiceResult pattern (not exceptions)
 - Both endpoints require authentication (inherits from BaseController)
+
+### Prompt 7: RSpec Tests for Pokemon API (Stage 1)
+
+```
+Lets implement RSpec tests. We'll do it in two stages. Lets work on the first stage considering the following files with the indicated considerations:
+
+app/adapters/pokemon_api_adapter.rb: This file use the PokeApi class to connect to thirdparty API. Let's use VCR to create cassettes for the test cases.
+app/services/pokemon/fetch_service.rb: Lets use fake data (double of PokemonEntity) coming from the repository object, so no need to use VCR.
+app/services/pokemon/list_service.rb: Lets use mimic data (double of array of hashes) coming from the repository object, so no need to use VCR.
+app/repositories/pokemon_repository.rb: Just define mocking expectations on the adapter object
+app/entities/pokemon_entity.rb: Basic attributes and to_h expectations.
+```
+
+**Test Files Created:**
+- `spec/support/vcr.rb` - VCR configuration with WebMock
+- `spec/entities/pokemon_entity_spec.rb` - Entity initialization and `to_h` tests
+- `spec/value_objects/service_result_spec.rb` - Success/failure factory methods, immutability
+- `spec/adapters/pokemon_api_adapter_spec.rb` - VCR cassettes for PokeAPI integration
+- `spec/repositories/pokemon_repository_spec.rb` - Adapter delegation with mocks
+- `spec/services/pokemon/fetch_service_spec.rb` - Mocked repository, ServiceResult responses
+- `spec/services/pokemon/list_service_spec.rb` - Pagination logic, mocked repository
+
+**Total: 72 tests, 0 failures**

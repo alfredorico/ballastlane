@@ -1,0 +1,69 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://pokeapi.co/api/v2/pokemon/999999
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - pokeapi.co
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Sat, 27 Dec 2025 14:02:44 GMT
+      Content-Type:
+      - text/plain; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Cache-Control:
+      - public, max-age=432000, s-maxage=432000
+      Etag:
+      - W/"9-0gXL1ngzMqISxa6S1zx3F4wtLyg"
+      Server:
+      - cloudflare
+      Traceparent:
+      - 00-4e0272fc68e1683771c926cea8480ebe-755e43110d4b1ad5-00
+      X-Cloud-Trace-Context:
+      - 4e0272fc68e1683771c926cea8480ebe/8457270890764901077
+      X-Powered-By:
+      - Express
+      Report-To:
+      - '{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=Bd5u1tq0Xwyevrn7UaIcDAMbEG3HhaJ8RYadHWlZc8zanrW4K%2BfJ1wCeRbOHOv8fI4GlKuE5fkqBlmH%2F6GjZoILtEft1rS1%2FiZk%3D"}]}'
+      X-Served-By:
+      - cache-lga21953-LGA
+      X-Cache:
+      - MISS
+      X-Cache-Hits:
+      - '0'
+      X-Timer:
+      - S1766844163.859601,VS0,VE1173
+      Vary:
+      - Accept-Encoding, x-fh-requested-host, accept-encoding
+      Alt-Svc:
+      - h3=":443"; ma=86400
+      Nel:
+      - '{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}'
+      Cf-Cache-Status:
+      - MISS
+      Cf-Ray:
+      - 9b495b71af9c9ab9-MIA
+    body:
+      encoding: ASCII-8BIT
+      string: Not Found
+  recorded_at: Sat, 27 Dec 2025 14:02:44 GMT
+recorded_with: VCR 6.4.0
