@@ -1,5 +1,7 @@
 module Pokemon
   class ListService
+    include Callable
+
     DEFAULT_PER_PAGE = 20
 
     def initialize(repository: PokemonRepository.new)

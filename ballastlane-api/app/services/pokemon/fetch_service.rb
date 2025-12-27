@@ -1,5 +1,7 @@
 module Pokemon
   class FetchService
+    include Callable
+    
     def initialize(repository: PokemonRepository.new)
       @repository = repository
     end
