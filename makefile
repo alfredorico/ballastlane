@@ -41,7 +41,8 @@ down:
 restart:
 	docker-compose restart
 
-
+npm:
+	docker-compose run --rm frontend npm $(filter-out $@,$(MAKECMDGOALS))	
 
 # Catch-all rule for arguments
 %:
