@@ -51,3 +51,17 @@ For the auth data model:
 
 Let me know any further clarification you may need for execute this plan.
 ```
+
+## Testing
+
+### Prompt 4: RSpec Testing Implementation
+
+```
+Lets implement testing for the features built so far.
+
+Please provide an RSpec file for the User model to test its behavior
+
+For the AuthController, lets create an RSpec of type `request`. Lets define contexts for each endpoint considering successful and failure cases. Remember to consider a failure case for invalid signup or login data
+
+For the refresh token endpoint it's important to also test behavior when trying to refresh with expired tokens either `refresh` (long live) or `access` (short live) tokens.
+```
