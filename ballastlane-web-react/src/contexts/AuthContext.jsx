@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useReducer,
-  useRef,
-  useEffect,
-} from "react";
+import { createContext, useContext, useReducer, useEffect } from "react";
 
 const BASE_URL = "http://localhost:3000/api/v1/auth";
 
@@ -15,6 +9,7 @@ const initialState = {
   isAuthenticated: false,
   isLoading: true,
   error: null,
+  accessToken: null,
 };
 
 function reducer(state, action) {
@@ -28,7 +23,8 @@ function reducer(state, action) {
     case "login":
       return {
         ...state,
-        user: action.payload,
+        user: action.payload.user,
+        accessToken: action.payload.accessToken,
         isAuthenticated: true,
         isLoading: false,
         error: null,
@@ -37,6 +33,7 @@ function reducer(state, action) {
       return {
         ...state,
         user: null,
+        accessToken: null,
         isAuthenticated: false,
         isLoading: false,
         error: null,
@@ -63,12 +60,8 @@ function reducer(state, action) {
 }
 
 function AuthProvider({ children }) {
-  const [{ user, isAuthenticated, isLoading, error }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
-
-  const jwtRef = useRef(null);
+  const [{ user, isAuthenticated, isLoading, error, accessToken }, dispatch] =
+    useReducer(reducer, initialState);
 
   // Restore session on mount
   useEffect(() => {
@@ -93,16 +86,14 @@ function AuthProvider({ children }) {
           return;
         }
 
-        const jwt = response.headers
-          .get("Authorization")
-          ?.replace("Bearer ", "");
         const data = await response.json();
 
-        jwtRef.current = jwt;
-        console.log(data.refresh_token);
         localStorage.setItem("refreshToken", data.refresh_token);
 
-        dispatch({ type: "login", payload: data.user });
+        dispatch({
+          type: "login",
+          payload: { user: data.user, accessToken: data.access_token },
+        });
       } catch {
         localStorage.removeItem("refreshToken");
         dispatch({ type: "session_checked" });
@@ -127,13 +118,14 @@ function AuthProvider({ children }) {
         throw new Error(errorData.error || "Invalid username or password");
       }
 
-      const jwt = response.headers.get("Authorization")?.replace("Bearer ", "");
       const data = await response.json();
 
-      jwtRef.current = jwt;
       localStorage.setItem("refreshToken", data.refresh_token);
 
-      dispatch({ type: "login", payload: data.user });
+      dispatch({
+        type: "login",
+        payload: { user: data.user, accessToken: data.access_token },
+      });
     } catch (err) {
       dispatch({ type: "error", payload: err.message });
     }
@@ -141,27 +133,22 @@ function AuthProvider({ children }) {
 
   async function logout() {
     try {
-      if (jwtRef.current) {
+      if (accessToken) {
         await fetch(`${BASE_URL}/logout`, {
           method: "DELETE",
-          headers: { Authorization: `Bearer ${jwtRef.current}` },
+          headers: { Authorization: `Bearer ${accessToken}` },
         });
       }
     } catch {
       // Ignore errors during logout - we still want to clear local state
     } finally {
       localStorage.removeItem("refreshToken");
-      jwtRef.current = null;
       dispatch({ type: "logout" });
     }
   }
 
   function clearError() {
     dispatch({ type: "clear_error" });
-  }
-
-  function getAuthHeader() {
-    return jwtRef.current ? { Authorization: `Bearer ${jwtRef.current}` } : {};
   }
 
   return (
@@ -171,10 +158,10 @@ function AuthProvider({ children }) {
         isAuthenticated,
         isLoading,
         error,
+        accessToken,
         login,
         logout,
         clearError,
-        getAuthHeader,
       }}
     >
       {children}
