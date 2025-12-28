@@ -4,12 +4,12 @@ A full-stack Pokemon application with a Rails 8.1 API backend and React 19 front
 
 ## Tech Stack
 
-| Layer    | Technology                          |
-| -------- | ----------------------------------- |
-| Backend  | Ruby 3.4.5, Rails 8.1.1 (API-only)  |
-| Frontend | React 19, Vite 7, Tailwind CSS 4    |
-| Database | PostgreSQL 15+                      |
-| DevOps   | Docker, Docker Compose              |
+| Layer    | Technology                         |
+| -------- | ---------------------------------- |
+| Backend  | Ruby 3.4.5, Rails 8.1.1 (API-only) |
+| Frontend | React 19, Vite 7, Tailwind CSS 4   |
+| Database | PostgreSQL 15+                     |
+| DevOps   | Docker, Docker Compose             |
 
 ## Project Structure
 
@@ -39,6 +39,7 @@ make up
 ```
 
 The application will be available at:
+
 - **Frontend:** http://localhost:5173
 - **API:** http://localhost:3000
 
@@ -49,21 +50,21 @@ The application will be available at:
 
 ## Makefile Commands
 
-| Command              | Description                              |
-| -------------------- | ---------------------------------------- |
-| `make up`            | Start all Docker services                |
-| `make down`          | Stop all Docker services                 |
-| `make restart`       | Restart all Docker services              |
-| `make setup`         | Full project setup (build + migrate)     |
-| `make bundle [args]` | Run bundler commands in API container    |
-| `make rails [args]`  | Run Rails commands in API container      |
-| `make console`       | Open Rails console                       |
-| `make test`          | Run Rails unit tests                     |
-| `make rspec [args]`  | Run RSpec tests with arguments           |
-| `make migrate`       | Run database migrations                  |
-| `make shell`         | Open bash shell in API container         |
-| `make pg`            | Connect to PostgreSQL database           |
-| `make npm [args]`    | Run npm commands in frontend container   |
+| Command              | Description                            |
+| -------------------- | -------------------------------------- |
+| `make up`            | Start all Docker services              |
+| `make down`          | Stop all Docker services               |
+| `make restart`       | Restart all Docker services            |
+| `make setup`         | Full project setup (build + migrate)   |
+| `make bundle [args]` | Run bundler commands in API container  |
+| `make rails [args]`  | Run Rails commands in API container    |
+| `make console`       | Open Rails console                     |
+| `make test`          | Run Rails unit tests                   |
+| `make rspec [args]`  | Run RSpec tests with arguments         |
+| `make migrate`       | Run database migrations                |
+| `make shell`         | Open bash shell in API container       |
+| `make pg`            | Connect to PostgreSQL database         |
+| `make npm [args]`    | Run npm commands in frontend container |
 
 ## Key Libraries
 
@@ -384,3 +385,54 @@ ACCESS_TOKEN=$(curl -s -X POST "$BASE_URL/auth/login" \
 curl -X GET "$BASE_URL/pokemons/charmander" \
   -H "Authorization: Bearer $ACCESS_TOKEN"
 ```
+
+## Generative AI Tools
+
+In regards to this requested task, the requirements are kinda general that makes room for some assumptions. In that sense,
+I've created a prompt in this [Claude Chat](https://claude.ai/share/f9dc8404-0c21-45ba-b059-b7c6831d3331).
+
+The prompt is:
+
+```
+Hey Claude,
+
+I need to build a Task management API in Rails 7.1 with PostgreSQL. I need a Task resource with CRUD operations.
+
+Following are my specific requirements on each paragraph:
+
+The Task model contains the following attributes:
+- title (string, required, max 200 chars). Apply trimming of the field in a before_save callback.
+- description (text, optional).
+- status (enum with values: pending, in_progress, completed). Let's define `pending` as default using the `attribute` method with default: 'pending' and prefix `status_` to avoid possible method collisions.
+- due_date (datetime). Let's add a validation that this field can not be less than the current timestamp.
+- user_id that refers to an existent User model (no need to generate it). Let's add an index and foreign key constraint in the database using a rails migration. Let's add relations has_many/belongs_to on Task/User models respectively with `dependent: :destroy` on User model.
+
+Let's create an RSpec test for the Task model to test validations and relations
+
+Let's implement an authentication system using JWT (don't use Devise) and providing short-live access token with refresh tokens. The authentication controller should provide, signup, login and logout endpoints. Let's also add versioning to the endpoints '/api/v1'
+
+For the TasksController:
+- Let's add versioning to the endpoints '/api/v1'
+- Let's use strong parameters, proper status HTTP codes for responses, and structured error responses.
+- Let's create a TaskSerializer using jsonapi-serializer gem for the JSON response
+- Let's protect TaskControllers endpoints with authentication. So provide this protection in the ApplicationController to be inherited in controllers.
+- Lets generate a RSpec test of type request to test the CRUD operations. Let's provide tests to validate the access with authenticated and non-authenticated users
+
+Please, don't try to install any project on my local. Just provide the files needed in a logical order and any observations you may have.
+
+Let me know any further clarification you might need if you consider it.
+```
+
+My strategy for prompt creation is to provide good enough context and to be as specific as possible based on my criteria.
+
+Honestly, Claude is really accurate. It provided even more things that I didn't specify (eg. CORS configuration).
+
+There are some missing things that AI didn't requested for clarification:
+
+- Handling invalid json data on POST request that would trigger HTTP 500 instead of 422. Actually I didn't consider it for the Pokemon app (ugh!!)
+- Soft deletion? (audit trails)
+- Pagination?
+
+But in the end, AI is a powerful tool to provide a good starting point that now days works really really well, helping developers to be faster and happy!
+
+In this repo there is a file.zip generated by Claude with its solution.
