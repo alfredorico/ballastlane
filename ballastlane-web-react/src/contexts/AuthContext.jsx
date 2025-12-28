@@ -132,18 +132,20 @@ function AuthProvider({ children }) {
   }
 
   async function logout() {
-    try {
-      if (accessToken) {
-        await fetch(`${BASE_URL}/logout`, {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-      }
-    } catch {
-      // Ignore errors during logout - we still want to clear local state
-    } finally {
-      localStorage.removeItem("refreshToken");
-      dispatch({ type: "logout" });
+    const token = accessToken;
+
+    // Clear local state first to prevent any fetches with revoked token
+    localStorage.removeItem("refreshToken");
+    dispatch({ type: "logout" });
+
+    // Then revoke on server (fire and forget)
+    if (token) {
+      fetch(`${BASE_URL}/logout`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      }).catch(() => {
+        // Ignore errors during logout
+      });
     }
   }
 
