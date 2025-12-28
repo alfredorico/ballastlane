@@ -1,9 +1,10 @@
 import { usePokemons } from "../contexts/PokemonContext";
-import PokemonDetail from "./PokemonDetail";
+import PokemonCard from "./PokemonCard";
 import Pagination from "./Pagination";
 
 export default function PokemonList() {
-  const { pokemons, pagination, isLoading, error, fetchPokemons } = usePokemons();
+  const { pokemons, pagination, isLoading, error, fetchPokemons } =
+    usePokemons();
 
   if (isLoading) {
     return (
@@ -23,10 +24,12 @@ export default function PokemonList() {
 
   return (
     <div className="p-4 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Pokemon Collection</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-4">
+        Pokemon Collection
+      </h1>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {pokemons.map((pokemon) => (
-          <PokemonDetail
+          <PokemonCard
             key={pokemon.id}
             id={pokemon.id}
             name={pokemon.name}

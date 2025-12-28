@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useReducer, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useCallback,
+} from "react";
 import { useAuth } from "./AuthContext";
 
 const BASE_URL = "http://localhost:3000/api/v1";
@@ -7,6 +13,7 @@ const PokemonsContext = createContext();
 
 const initialState = {
   pokemons: [],
+  currentPokemon: {},
   pagination: { page: 1, total_pages: 1 },
   isLoading: false,
   error: "",
@@ -44,10 +51,8 @@ function reducer(state, action) {
 }
 
 function PokemonsProvider({ children }) {
-  const [{ pokemons, pagination, isLoading, error }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ pokemons, currentPokemon, pagination, isLoading, error }, dispatch] =
+    useReducer(reducer, initialState);
 
   const { accessToken } = useAuth();
 
@@ -58,9 +63,12 @@ function PokemonsProvider({ children }) {
       dispatch({ type: "loading" });
 
       try {
-        const res = await fetch(`${BASE_URL}/pokemons?page=${page}&per_page=20`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
+        const res = await fetch(
+          `${BASE_URL}/pokemons?page=${page}&per_page=20`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
         const data = await res.json();
         dispatch({
           type: "pokemons/loaded",
@@ -76,6 +84,29 @@ function PokemonsProvider({ children }) {
     [accessToken]
   );
 
+  const getPokemon = useCallback(
+    async function getPokemon(id) {
+      dispatch({ type: "loading" });
+
+      if (Number(id) === currentPokemon.id) return;
+
+      try {
+        const res = await fetch(`${BASE_URL}/pokemons/${id}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        const data = await res.json();
+        dispatch({ type: "pokemon/loaded", payload: data });
+      } catch (error) {
+        dispatch({
+          type: "rejected",
+          payload:
+            "There was an error loading the pokemon... " + error?.message,
+        });
+      }
+    },
+    [accessToken, currentPokemon.id]
+  );
+
   useEffect(() => {
     fetchPokemons(1);
   }, [fetchPokemons]);
@@ -84,10 +115,12 @@ function PokemonsProvider({ children }) {
     <PokemonsContext.Provider
       value={{
         pokemons,
+        currentPokemon,
         pagination,
         isLoading,
         error,
         fetchPokemons,
+        getPokemon,
       }}
     >
       {children}
