@@ -9,6 +9,7 @@ import PageNotFound from "./pages/PageNotFound";
 import Homepage from "./pages/Homepage";
 
 import PokemonList from "./components/PokemonList";
+import { PokemonsProvider } from "./contexts/PokemonContext";
 function App() {
   return (
     <AuthProvider>
@@ -20,7 +21,9 @@ function App() {
             path="app"
             element={
               <ProtectedRouted>
-                <AppLayout />
+                <PokemonsProvider>
+                  <AppLayout />
+                </PokemonsProvider>
               </ProtectedRouted>
             }
           >

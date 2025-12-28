@@ -160,6 +160,7 @@ app/controllers/api/v1/pokemons_controller.rb
 ```
 
 **Architecture:**
+
 ```
 Controller → Service → Repository → Adapter → PokeAPI
                 ↓
@@ -169,6 +170,7 @@ Controller → Service → Repository → Adapter → PokeAPI
 ```
 
 **Key Decisions:**
+
 - List endpoint returns basic info only (id, name, photo) for performance
 - Show endpoint returns full details (weight, height, types, abilities, photo, hq_photo, description)
 - Errors handled via ServiceResult pattern (not exceptions)
@@ -187,6 +189,7 @@ app/entities/pokemon_entity.rb: Basic attributes and to_h expectations.
 ```
 
 **Test Files Created:**
+
 - `spec/support/vcr.rb` - VCR configuration with WebMock
 - `spec/entities/pokemon_entity_spec.rb` - Entity initialization and `to_h` tests
 - `spec/value_objects/service_result_spec.rb` - Success/failure factory methods, immutability
@@ -207,9 +210,11 @@ Lets implement a RSpec tests of type request for the PokemonController consideri
 ```
 
 **Test File Created:**
+
 - `spec/requests/api/v1/pokemons_spec.rb` - Request specs for PokemonsController
 
 **Test Coverage:**
+
 - Authentication protection (8 tests): missing token, invalid token, expired token, revoked token for both endpoints
 - Index endpoint success cases: returns 200, pokemons array, basic info, pagination metadata, respects per_page param
 - Show endpoint success cases: returns 200 for valid ID, Pokemon details, works with name, returns 404 for invalid Pokemon
@@ -230,6 +235,7 @@ Claude, lets work on a plan for the frontend according to this criteria:
 ```
 
 **Preferences Selected:**
+
 - Color scheme: Pokemon-themed (red primary, yellow accents)
 - Grid items: 12 fake Pokemon cards
 - Card style: Detailed cards (image placeholder, name, type, stats)
@@ -249,6 +255,7 @@ Could you reduce the size of pokemon cards?
 ```
 
 **Changes Made:**
+
 - Login NavLink styled as red button matching Logout button
 - Logo component: flex layout with image + white "Pokedex" text
 - Pokemon cards: smaller grid (6 columns on lg), reduced padding/fonts
@@ -264,6 +271,7 @@ Lets intensify the color of the inner gradient of the pokemon card. But if possi
 ```
 
 **Final Card Design:**
+
 - Square aspect ratio with rounded corners and shadow
 - ID number at top-right (light gray, bold)
 - Centered Pokemon icon with radial gradient background
@@ -271,9 +279,38 @@ Lets intensify the color of the inner gradient of the pokemon card. But if possi
 - Gradient: linear from bottom (stronger gray) to top (transparent)
 
 **Files Modified:**
+
 - `ballastlane-web-react/src/components/Button.jsx` - Red primary button styling
 - `ballastlane-web-react/src/components/Logo.jsx` - Flex layout, white text
 - `ballastlane-web-react/src/components/PageNav.jsx` - Flex navbar, red background (#dc0a2d)
 - `ballastlane-web-react/src/components/Message.jsx` - Error alert styling
 - `ballastlane-web-react/src/pages/Login.jsx` - Centered card form, styled inputs
 - `ballastlane-web-react/src/components/PokemonList.jsx` - Grid with styled Pokemon cards
+
+## Frontend API Integration & Pagination
+
+### Prompt 12: Pagination Implementation
+
+```
+Lets create PaginationComponent with a sliding range of ten pages in the list of pages. Also define next and previous links.
+To fetch data from the Nth page, just append the page_number and per_page as query parameter: `/api/v1/pokemons?page=2&per_page=20`.
+```
+
+```
+Is it possible to update the numbers from the sliding pages range when we press next to reflect the real page number? I mean, lets suppose that I click next for the first time. I'd expect a range from 11 to 20.
+```
+
+**Implementation:**
+
+- Previous/Next buttons navigate by 10-page chunks (1-10 → 11-20 → 21-30)
+- Individual page numbers for single-page navigation within current chunk
+- Disabled states at boundaries
+
+**Files Modified:**
+
+- `ballastlane-web-react/src/contexts/PokemonContext.jsx` - Added pagination state, `fetchPokemons(page)` function with `useCallback`
+- `ballastlane-web-react/src/components/PokemonList.jsx` - Integrated Pagination component
+
+**Files Created:**
+
+- `ballastlane-web-react/src/components/Pagination.jsx` - Sliding window pagination with chunk-based navigation
