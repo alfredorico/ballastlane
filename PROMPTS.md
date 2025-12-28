@@ -99,7 +99,6 @@ data = {
   types: pokemon.types.map { |t| t.type.name },
   abilities: pokemon.abilities.map { |a| a.ability.name },
   photo: pokemon.sprites.front_default,
-  hq_photo: pokemon.sprites.other.official_artwork.front_default
 }
 
 # Get description (requires chaining to species)
@@ -172,7 +171,7 @@ Controller → Service → Repository → Adapter → PokeAPI
 **Key Decisions:**
 
 - List endpoint returns basic info only (id, name, photo) for performance
-- Show endpoint returns full details (weight, height, types, abilities, photo, hq_photo, description)
+- Show endpoint returns full details (weight, height, types, abilities, photo, description)
 - Errors handled via ServiceResult pattern (not exceptions)
 - Both endpoints require authentication (inherits from BaseController)
 

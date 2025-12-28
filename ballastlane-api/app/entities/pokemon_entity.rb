@@ -1,5 +1,5 @@
 class PokemonEntity
-  attr_reader :id, :name, :weight, :height, :types, :abilities, :photo, :hq_photo, :description
+  attr_reader :id, :name, :weight, :height, :types, :abilities, :photo, :description
 
   def initialize(attributes = {})
     @id = attributes[:id]
@@ -9,7 +9,6 @@ class PokemonEntity
     @types = attributes[:types] || []
     @abilities = attributes[:abilities] || []
     @photo = attributes[:photo]
-    @hq_photo = attributes[:hq_photo]
     @description = attributes[:description]
   end
 
@@ -22,7 +21,6 @@ class PokemonEntity
       types: types,
       abilities: abilities,
       photo: photo,
-      hq_photo: hq_photo,
       description: description
     }
   end

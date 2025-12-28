@@ -9,7 +9,11 @@ const typeColors = {
     light: "bg-purple-400",
     text: "text-purple-500",
   },
-  fire: { bg: "bg-orange-500", light: "bg-orange-400", text: "text-orange-500" },
+  fire: {
+    bg: "bg-orange-500",
+    light: "bg-orange-400",
+    text: "text-orange-500",
+  },
   water: { bg: "bg-blue-500", light: "bg-blue-400", text: "text-blue-500" },
   electric: {
     bg: "bg-yellow-400",
@@ -79,7 +83,6 @@ function PokemonDetail() {
     types = [],
     abilities = [],
     photo,
-    hq_photo,
     description,
   } = currentPokemon;
 
@@ -115,7 +118,9 @@ function PokemonDetail() {
           </span>
         </div>
 
-        <h1 className="text-white text-3xl font-bold mt-4 capitalize">{name}</h1>
+        <h1 className="text-white text-3xl font-bold mt-4 capitalize">
+          {name}
+        </h1>
 
         {/* Type badges */}
         <div className="flex gap-2 mt-3">
@@ -135,7 +140,7 @@ function PokemonDetail() {
       {/* Pokemon Image */}
       <div className="flex justify-center -mb-16 relative z-10">
         <img
-          src={hq_photo || photo}
+          src={photo}
           alt={name}
           className="w-52 h-52 object-contain drop-shadow-xl"
         />
@@ -167,7 +172,9 @@ function PokemonDetail() {
                   d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
                 />
               </svg>
-              <span className="font-medium text-gray-800">{weight / 10} kg</span>
+              <span className="font-medium text-gray-800">
+                {weight / 10} kg
+              </span>
             </div>
             <span className="text-xs text-gray-400">Weight</span>
           </div>

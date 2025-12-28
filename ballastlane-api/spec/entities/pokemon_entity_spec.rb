@@ -10,7 +10,6 @@ RSpec.describe PokemonEntity do
       types: [ "electric" ],
       abilities: [ "static", "lightning-rod" ],
       photo: "https://example.com/pikachu.png",
-      hq_photo: "https://example.com/pikachu-hq.png",
       description: "A yellow electric mouse Pokemon."
     }
   end
@@ -27,7 +26,6 @@ RSpec.describe PokemonEntity do
         expect(entity.types).to eq([ "electric" ])
         expect(entity.abilities).to eq([ "static", "lightning-rod" ])
         expect(entity.photo).to eq("https://example.com/pikachu.png")
-        expect(entity.hq_photo).to eq("https://example.com/pikachu-hq.png")
         expect(entity.description).to eq("A yellow electric mouse Pokemon.")
       end
     end
@@ -47,7 +45,6 @@ RSpec.describe PokemonEntity do
         expect(entity.weight).to be_nil
         expect(entity.height).to be_nil
         expect(entity.photo).to be_nil
-        expect(entity.hq_photo).to be_nil
         expect(entity.description).to be_nil
       end
     end
@@ -78,12 +75,11 @@ RSpec.describe PokemonEntity do
       expect(result[:types]).to eq([ "electric" ])
       expect(result[:abilities]).to eq([ "static", "lightning-rod" ])
       expect(result[:photo]).to eq("https://example.com/pikachu.png")
-      expect(result[:hq_photo]).to eq("https://example.com/pikachu-hq.png")
       expect(result[:description]).to eq("A yellow electric mouse Pokemon.")
     end
 
     it "includes all expected keys" do
-      expected_keys = [ :id, :name, :weight, :height, :types, :abilities, :photo, :hq_photo, :description ]
+      expected_keys = [ :id, :name, :weight, :height, :types, :abilities, :photo, :description ]
       expect(entity.to_h.keys).to match_array(expected_keys)
     end
   end

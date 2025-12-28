@@ -17,7 +17,6 @@ RSpec.describe Pokemon::FetchService do
             types: [ "electric" ],
             abilities: [ "static", "lightning-rod" ],
             photo: "https://example.com/pikachu.png",
-            hq_photo: "https://example.com/pikachu-hq.png",
             description: "A yellow electric mouse Pokemon."
           }
         )
@@ -46,7 +45,7 @@ RSpec.describe Pokemon::FetchService do
         result = service.call(25)
 
         expect(result.data).to include(
-          :id, :name, :weight, :height, :types, :abilities, :photo, :hq_photo, :description
+          :id, :name, :weight, :height, :types, :abilities, :photo, :description
         )
       end
     end

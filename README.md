@@ -38,10 +38,10 @@ make rails db:seed
 
 This API uses JWT (JSON Web Token) for authentication with a dual-token system:
 
-| Token Type | Expiration | Purpose |
-|------------|------------|---------|
-| Access Token | 15 minutes | Authenticate API requests |
-| Refresh Token | 1 week | Obtain new token pairs |
+| Token Type    | Expiration | Purpose                   |
+| ------------- | ---------- | ------------------------- |
+| Access Token  | 15 minutes | Authenticate API requests |
+| Refresh Token | 1 week     | Obtain new token pairs    |
 
 ### Security Features
 
@@ -56,6 +56,7 @@ This API uses JWT (JSON Web Token) for authentication with a dual-token system:
 Create a new user account.
 
 **Request:**
+
 ```json
 {
   "username": "johndoe",
@@ -65,10 +66,12 @@ Create a new user account.
 ```
 
 **Validations:**
+
 - Username: alphanumeric only, whitespace auto-trimmed
-- Password: 5-64 characters, alphanumeric + special chars (. - ! * #)
+- Password: 5-64 characters, alphanumeric + special chars (. - ! \* #)
 
 **Response (201 Created):**
+
 ```json
 {
   "message": "Account created successfully",
@@ -89,6 +92,7 @@ Create a new user account.
 Authenticate and obtain tokens.
 
 **Request:**
+
 ```json
 {
   "username": "johndoe",
@@ -97,6 +101,7 @@ Authenticate and obtain tokens.
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "message": "Login successful",
@@ -117,11 +122,13 @@ Authenticate and obtain tokens.
 Revoke the current session (requires authentication).
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "message": "Logged out successfully"
@@ -133,6 +140,7 @@ Authorization: Bearer <access_token>
 Exchange refresh token for new token pair.
 
 **Request:**
+
 ```json
 {
   "refresh_token": "eyJhbGciOiJIUzI1NiJ9..."
@@ -140,6 +148,7 @@ Exchange refresh token for new token pair.
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "message": "Token refreshed successfully",
@@ -153,6 +162,7 @@ Exchange refresh token for new token pair.
 ### Error Responses
 
 **401 Unauthorized:**
+
 ```json
 {
   "error": "Invalid username or password"
@@ -160,6 +170,7 @@ Exchange refresh token for new token pair.
 ```
 
 **422 Unprocessable Entity:**
+
 ```json
 {
   "error": "Signup failed",
@@ -211,6 +222,7 @@ Protected endpoints for fetching Pokemon data from PokeAPI.
 List Pokemon with pagination. Returns basic info (id, name, photo).
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
@@ -222,11 +234,20 @@ Authorization: Bearer <access_token>
 | per_page | 20 | Items per page |
 
 **Response (200 OK):**
+
 ```json
 {
   "pokemons": [
-    { "id": 1, "name": "bulbasaur", "photo": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" },
-    { "id": 2, "name": "ivysaur", "photo": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png" }
+    {
+      "id": 1,
+      "name": "bulbasaur",
+      "photo": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
+    },
+    {
+      "id": 2,
+      "name": "ivysaur",
+      "photo": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png"
+    }
   ],
   "pagination": {
     "page": 1,
@@ -244,11 +265,13 @@ Authorization: Bearer <access_token>
 Get detailed Pokemon information by ID or name.
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "id": 25,
@@ -258,12 +281,12 @@ Authorization: Bearer <access_token>
   "types": ["electric"],
   "abilities": ["static", "lightning-rod"],
   "photo": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
-  "hq_photo": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
   "description": "When several of these POKéMON gather, their electricity could build and cause lightning storms."
 }
 ```
 
 **Error Response (404 Not Found):**
+
 ```json
 {
   "error": "Pokemon not found"
