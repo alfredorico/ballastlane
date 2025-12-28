@@ -5,18 +5,15 @@ import Login from "./pages/Login";
 import AppLayout from "./pages/AppLayout";
 import ProtectedRouted from "./pages/ProtectedRouted";
 import PageNotFound from "./pages/PageNotFound";
-
-import Homepage from "./pages/Homepage";
-
 import PokemonList from "./components/PokemonList";
 import { PokemonsProvider } from "./contexts/PokemonContext";
+
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route index element={<Homepage />} />
-          <Route path="login" element={<Login />} />
+          <Route index element={<Login />} />
           <Route
             path="app"
             element={

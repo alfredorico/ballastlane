@@ -22,14 +22,6 @@ function PageNav() {
             Logout
           </Button>
         )}
-        {!isAuthenticated && (
-          <NavLink
-            to="/login"
-            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
-          >
-            Login
-          </NavLink>
-        )}
       </div>
     </nav>
   );
