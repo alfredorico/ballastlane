@@ -1,42 +1,102 @@
-# Ballastlane API
+# Ballastlane
 
-Rails 8.1 API-only application with JWT authentication.
+A full-stack Pokemon application with a Rails 8.1 API backend and React 19 frontend.
+
+## Tech Stack
+
+| Layer    | Technology                          |
+| -------- | ----------------------------------- |
+| Backend  | Ruby 3.4.5, Rails 8.1.1 (API-only)  |
+| Frontend | React 19, Vite 7, Tailwind CSS 4    |
+| Database | PostgreSQL 15+                      |
+| DevOps   | Docker, Docker Compose              |
+
+## Project Structure
+
+```
+ballastlane/
+├── ballastlane-api/           # Rails API backend
+├── ballastlane-web-react/     # React frontend
+├── docker-compose.yml         # Multi-container orchestration
+└── makefile                   # Development commands
+```
 
 ## Requirements
 
-- Ruby 3.4.5
-- Rails 8.1.1
-- PostgreSQL 15+
 - Docker & Docker Compose
 
-## Setup
-
-### Using Docker (Recommended)
+## Quick Start with Docker
 
 ```bash
-# Start services
-make up
-
-# Install dependencies
-make bundle install
-
-# Run migrations
-make migrate
+# Full setup (build, install dependencies, run migrations)
+make setup
 
 # Seed the database (creates admin user)
 make rails db:seed
+
+# Start all services
+make up
 ```
+
+The application will be available at:
+- **Frontend:** http://localhost:5173
+- **API:** http://localhost:3000
 
 ### Default Credentials
 
 - Username: `admin`
 - Password: `admin`
 
+## Makefile Commands
+
+| Command              | Description                              |
+| -------------------- | ---------------------------------------- |
+| `make up`            | Start all Docker services                |
+| `make down`          | Stop all Docker services                 |
+| `make restart`       | Restart all Docker services              |
+| `make setup`         | Full project setup (build + migrate)     |
+| `make bundle [args]` | Run bundler commands in API container    |
+| `make rails [args]`  | Run Rails commands in API container      |
+| `make console`       | Open Rails console                       |
+| `make test`          | Run Rails unit tests                     |
+| `make rspec [args]`  | Run RSpec tests with arguments           |
+| `make migrate`       | Run database migrations                  |
+| `make shell`         | Open bash shell in API container         |
+| `make pg`            | Connect to PostgreSQL database           |
+| `make npm [args]`    | Run npm commands in frontend container   |
+
+## Key Libraries
+
+### Backend (Rails API)
+
+| Gem               | Purpose                                |
+| ----------------- | -------------------------------------- |
+| `pg`              | PostgreSQL database adapter            |
+| `puma`            | Web server                             |
+| `bcrypt`          | Password hashing (has_secure_password) |
+| `jwt`             | JWT token generation/verification      |
+| `rack-cors`       | CORS support for cross-origin requests |
+| `poke-api-v2`     | PokeAPI wrapper                        |
+| `rspec-rails`     | Testing framework                      |
+| `factory_bot`     | Test data factories                    |
+| `vcr` + `webmock` | HTTP request mocking for tests         |
+
+### Frontend (React)
+
+| Package            | Purpose                     |
+| ------------------ | --------------------------- |
+| `react`            | UI library (v19)            |
+| `react-dom`        | React DOM rendering         |
+| `react-router-dom` | Client-side routing (v7)    |
+| `tailwindcss`      | Utility-first CSS framework |
+| `vite`             | Build tool and dev server   |
+| `eslint`           | Code linting                |
+
 ## Authentication
 
 ### Overview
 
-This API uses JWT (JSON Web Token) for authentication with a dual-token system:
+This API uses JWT with a dual-token system:
 
 | Token Type    | Expiration | Purpose                   |
 | ------------- | ---------- | ------------------------- |
