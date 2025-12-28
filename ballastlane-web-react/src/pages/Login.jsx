@@ -26,39 +26,60 @@ export default function Login() {
   }, [username, password]);
 
   return (
-    <main>
+    <main className="min-h-screen bg-gray-100">
       <PageNav />
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">username</label>
-          <input
-            type="username"
-            id="username"
-            onChange={(e) => setUsername(e.target.value)}
-            value={username}
-            disabled={isLoading}
-          />
-        </div>
+      <div className="flex justify-center items-center pt-16 px-4">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md space-y-6"
+        >
+          <h2 className="text-2xl font-bold text-center text-gray-800">
+            Login
+          </h2>
 
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            disabled={isLoading}
-          />
-        </div>
+          <div className="space-y-2">
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              onChange={(e) => setUsername(e.target.value)}
+              value={username}
+              disabled={isLoading}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+            />
+          </div>
 
-        {error && <Message message={error} />}
+          <div className="space-y-2">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              disabled={isLoading}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+            />
+          </div>
 
-        <div>
-          <Button type="primary" disabled={isLoading}>
-            {isLoading ? "Logging in..." : "Login"}
-          </Button>
-        </div>
-      </form>
+          {error && <Message message={error} />}
+
+          <div>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "Logging in..." : "Login"}
+            </Button>
+          </div>
+        </form>
+      </div>
     </main>
   );
 }
